@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, File, FileJson, FileCode, FileText, Folder } from 'lucide-react';
 
 interface EditorTabsProps {
   openFiles: string[];
@@ -15,40 +15,56 @@ const EditorTabs: React.FC<EditorTabsProps> = ({
   onTabClick,
   onTabClose,
 }) => {
-  const getFileName = (path: string) => {
-    const parts = path.split('/');
-    return parts[parts.length - 1];
+  const getFileIcon = (filePath: string) => {
+    const extension = filePath.split('.').pop()?.toLowerCase();
+    
+    switch (extension) {
+      case 'json':
+        return <FileJson size={16} />;
+      case 'js':
+      case 'jsx':
+      case 'ts':
+      case 'tsx':
+        return <FileCode size={16} className="text-yellow-400" />;
+      case 'html':
+        return <FileCode size={16} className="text-orange-400" />;
+      case 'css':
+      case 'scss':
+        return <FileCode size={16} className="text-blue-400" />;
+      case 'md':
+        return <FileText size={16} />;
+      default:
+        return <File size={16} />;
+    }
   };
 
-  if (openFiles.length === 0) {
-    return null;
-  }
+  const getFileName = (filePath: string) => {
+    return filePath.split('/').pop();
+  };
 
   return (
-    <div className="flex bg-tab-inactiveBackground overflow-x-auto">
-      {openFiles.map((file) => {
-        const isActive = file === activeFile;
-        return (
-          <div
-            key={file}
-            className={`flex items-center px-3 py-1 border-r border-tab-border cursor-pointer group ${
-              isActive ? 'bg-tab-activeBackground text-tab-activeForeground' : 'bg-tab-inactiveBackground text-tab-inactiveForeground'
-            }`}
-            onClick={() => onTabClick(file)}
-          >
-            <span className="truncate max-w-[150px]">{getFileName(file)}</span>
-            <button
-              className="ml-2 opacity-0 group-hover:opacity-100 hover:bg-editor-background rounded p-0.5"
-              onClick={(e) => {
-                e.stopPropagation();
-                onTabClose(file);
-              }}
-            >
-              <X size={14} />
-            </button>
+    <div className="flex h-9 bg-[#252526] overflow-x-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+      {openFiles.map((file) => (
+        <div
+          key={file}
+          className={`vscode-tab ${activeFile === file ? 'active' : ''}`}
+          onClick={() => onTabClick(file)}
+        >
+          <div className="flex items-center">
+            <span className="mr-2">{getFileIcon(file)}</span>
+            <span className="truncate max-w-[120px]">{getFileName(file)}</span>
           </div>
-        );
-      })}
+          <button
+            className="ml-2 p-0.5 rounded hover:bg-[#383838] focus:outline-none"
+            onClick={(e) => {
+              e.stopPropagation();
+              onTabClose(file);
+            }}
+          >
+            <X size={16} />
+          </button>
+        </div>
+      ))}
     </div>
   );
 };

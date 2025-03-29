@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import Editor, { Monaco, OnMount } from '@monaco-editor/react';
 import { editor } from 'monaco-editor';
@@ -27,7 +26,7 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
       scrollBeyondLastLine: false,
       fontSize: 14,
       lineHeight: 22,
-      fontFamily: "'Fira Code', 'Menlo', 'Monaco', 'Courier New', monospace",
+      fontFamily: "'Fira Code', 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
       tabSize: 2,
       wordWrap: 'on',
       readOnly,
@@ -36,22 +35,52 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
       roundedSelection: true,
       selectOnLineNumbers: true,
       cursorBlinking: 'smooth',
+      cursorSmoothCaretAnimation: 'on',
+      smoothScrolling: true,
+      bracketPairColorization: {
+        enabled: true,
+      }
     });
 
-    // Add custom theme
+    // Add custom theme that closely resembles VS Code dark theme
     monaco.editor.defineTheme('vscode-dark', {
       base: 'vs-dark',
       inherit: true,
-      rules: [],
+      rules: [
+        { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
+        { token: 'keyword', foreground: '569CD6' },
+        { token: 'string', foreground: 'CE9178' },
+        { token: 'number', foreground: 'B5CEA8' },
+        { token: 'type', foreground: '4EC9B0' },
+        { token: 'class', foreground: '4EC9B0' },
+        { token: 'function', foreground: 'DCDCAA' },
+        { token: 'variable', foreground: '9CDCFE' },
+        { token: 'variable.predefined', foreground: '4FC1FF' },
+        { token: 'parameter', foreground: '9CDCFE' },
+        { token: 'operator', foreground: 'D4D4D4' },
+        { token: 'delimiter', foreground: 'D4D4D4' },
+        { token: 'delimiter.bracket', foreground: 'D4D4D4' },
+        { token: 'tag', foreground: '569CD6' },
+        { token: 'attribute.name', foreground: '9CDCFE' },
+        { token: 'attribute.value', foreground: 'CE9178' },
+      ],
       colors: {
-        'editor.background': '#1e1e1e',
-        'editor.foreground': '#d4d4d4',
-        'editor.lineHighlightBackground': '#2c313a',
-        'editor.selectionBackground': '#264f78',
-        'editor.selectionHighlightBackground': '#1b4171',
-        'editorCursor.foreground': '#d4d4d4',
-        'editorWhitespace.foreground': '#3b3b3b',
+        'editor.background': '#1E1E1E',
+        'editor.foreground': '#D4D4D4',
+        'editorCursor.foreground': '#AEAFAD',
+        'editor.lineHighlightBackground': '#2C313A',
+        'editorLineNumber.foreground': '#858585',
+        'editor.selectionBackground': '#264F78',
+        'editor.selectionHighlightBackground': '#ADD6FF26',
+        'editorSuggestWidget.background': '#252526',
+        'editorSuggestWidget.border': '#454545',
+        'editorSuggestWidget.foreground': '#D4D4D4',
+        'editorSuggestWidget.highlightForeground': '#0097FB',
+        'editorSuggestWidget.selectedBackground': '#04395E',
+        'editorHoverWidget.background': '#252526',
+        'editorHoverWidget.border': '#454545',
         'editorIndentGuide.background': '#404040',
+        'editorIndentGuide.activeBackground': '#707070',
       }
     });
 
@@ -59,57 +88,100 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
   };
 
   const getLanguageFromExtension = (filename: string): string => {
-    const ext = filename.toLowerCase();
-    switch (ext) {
-      case 'js':
-        return 'javascript';
-      case 'jsx':
-        return 'javascript';
-      case 'ts':
-        return 'typescript';
-      case 'tsx':
-        return 'typescript';
-      case 'html':
-        return 'html';
-      case 'css':
-        return 'css';
-      case 'json':
-        return 'json';
-      case 'md':
-        return 'markdown';
-      case 'py':
-        return 'python';
-      case 'java':
-        return 'java';
-      case 'c':
-        return 'c';
-      case 'cpp':
-        return 'cpp';
-      case 'go':
-        return 'go';
-      case 'rs':
-        return 'rust';
-      case 'php':
-        return 'php';
-      case 'rb':
-        return 'ruby';
-      case 'sh':
-        return 'shell';
-      case 'sql':
-        return 'sql';
-      case 'yaml':
-      case 'yml':
-        return 'yaml';
-      default:
-        return 'plaintext';
-    }
+    if (!filename) return 'plaintext';
+    
+    const extension = filename.split('.').pop()?.toLowerCase() || '';
+    
+    const languageMap: Record<string, string> = {
+      // Web development
+      'js': 'javascript',
+      'jsx': 'javascript',
+      'ts': 'typescript',
+      'tsx': 'typescript',
+      'html': 'html',
+      'css': 'css',
+      'scss': 'scss',
+      'less': 'less',
+      'json': 'json',
+      'jsonc': 'jsonc',
+      'md': 'markdown',
+      'xml': 'xml',
+      'svg': 'xml',
+      
+      // Backend languages
+      'py': 'python',
+      'java': 'java',
+      'c': 'c',
+      'cpp': 'cpp',
+      'cs': 'csharp',
+      'go': 'go',
+      'rs': 'rust',
+      'php': 'php',
+      'rb': 'ruby',
+      'pl': 'perl',
+      'swift': 'swift',
+      'kt': 'kotlin',
+      
+      // Shell and config
+      'sh': 'shell',
+      'bash': 'shell',
+      'zsh': 'shell',
+      'ps1': 'powershell',
+      'bat': 'bat',
+      'cmd': 'bat',
+      'sql': 'sql',
+      'yaml': 'yaml',
+      'yml': 'yaml',
+      'toml': 'ini',
+      'ini': 'ini',
+      'conf': 'ini',
+      'env': 'ini',
+      
+      // Other
+      'graphql': 'graphql',
+      'gql': 'graphql',
+      'tex': 'latex',
+      'dockerfile': 'dockerfile',
+      'gitignore': 'ignore',
+      'gitattributes': 'ignore',
+      'editorconfig': 'ini'
+    };
+    
+    return languageMap[extension] || 'plaintext';
   };
+
+  // Dynamic language detection based on file path and content
+  const detectLanguage = (filePath: string, content: string): string => {
+    // Try to detect from extension first
+    const extensionLanguage = getLanguageFromExtension(filePath);
+    if (extensionLanguage !== 'plaintext') {
+      return extensionLanguage;
+    }
+    
+    // If no extension or unknown extension, try to detect from content
+    if (content.startsWith('<!DOCTYPE html>') || /<html|<body|<head/.test(content)) {
+      return 'html';
+    }
+    
+    if (/import .* from|export const|function \w+\s*\(|class \w+ (extends|implements)/.test(content)) {
+      // Contains JS/TS syntax
+      return /interface |type \w+ =|<\w+>\s*/.test(content) ? 'typescript' : 'javascript';
+    }
+    
+    if (/^import|^from|def \w+\s*\(|class \w+:/.test(content)) {
+      return 'python';
+    }
+    
+    return 'plaintext';
+  };
+
+  const editorLanguage = detectLanguage(language, value);
 
   return (
     <div className="w-full h-full">
       <Editor
         defaultLanguage="javascript"
-        language={getLanguageFromExtension(language)}
+        language={editorLanguage}
         value={value}
         onChange={onChange}
         onMount={handleEditorDidMount}
@@ -118,7 +190,8 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
           automaticLayout: true,
           minimap: { enabled: true },
           fontSize: 14,
-          fontFamily: "'Fira Code', 'Menlo', 'Monaco', 'Courier New', monospace",
+          fontFamily: "'Fira Code', 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace",
+          fontLigatures: true,
           wordWrap: 'on',
           lineNumbers: 'on',
           folding: true,
@@ -126,7 +199,10 @@ const MonacoEditor: React.FC<MonacoEditorProps> = ({
           formatOnPaste: true,
           formatOnType: true,
           cursorBlinking: 'smooth',
+          cursorSmoothCaretAnimation: 'on',
           smoothScrolling: true,
+          bracketPairColorization: { enabled: true },
+          guides: { bracketPairs: 'active' },
           readOnly,
         }}
         className="monaco-editor"

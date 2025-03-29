@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
 @layer base {
   :root {
     --background: 0 0% 12%;
@@ -34,6 +37,19 @@
     --ring: 0 0% 42%;
 
     --radius: 0.25rem;
+
+    /* VS Code specific colors */
+    --vscode-bg: #1E1E1E;
+    --vscode-sidebar-bg: #252526;
+    --vscode-sidebar-border: #383838;
+    --vscode-activitybar-bg: #333333;
+    --vscode-activitybar-indicator: #0078D4;
+    --vscode-statusbar-bg: #007ACC;
+    --vscode-title-border: #252526;
+    --vscode-tab-active-bg: #1E1E1E;
+    --vscode-tab-inactive-bg: #2D2D2D;
+    --vscode-tab-border: #252526;
+    --vscode-editor-lineHighlight: #2a2d2e;
   }
 }
 
@@ -42,12 +58,13 @@
     @apply border-border;
   }
   body {
-    @apply bg-editor-background text-editor-foreground;
+    @apply bg-[#1E1E1E] text-[#CCCCCC];
     margin: 0;
     padding: 0;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   }
   #root {
     max-width: 100%;
@@ -60,6 +77,30 @@
 }
 
 @layer components {
+  .vscode-tab {
+    @apply bg-[#2D2D2D] text-[#969696] hover:text-white flex items-center h-9 px-3 border-t border-transparent transition-colors;
+  }
+  
+  .vscode-tab.active {
+    @apply bg-[#1E1E1E] text-white border-t-[#0078D4];
+  }
+  
+  .vscode-sidebar {
+    @apply bg-[#252526] text-[#CCCCCC] border-r border-[#383838];
+  }
+  
+  .vscode-activity-bar {
+    @apply bg-[#333333] text-white border-r border-[#252526];
+  }
+  
+  .vscode-status-bar {
+    @apply bg-[#007ACC] text-white text-xs h-6;
+  }
+  
+  .vscode-status-item {
+    @apply px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors flex items-center;
+  }
+  
   .editor-container {
     height: 100%;
     width: 100%;
@@ -70,4 +111,27 @@
     height: 100%;
     width: 100%;
   }
+  
+  .resize-handle {
+    @apply w-1 h-full bg-[#1E1E1E] cursor-col-resize;
+  }
+  
+  .resize-handle:hover,
+  .resize-handle.resizing {
+    @apply bg-[#0078D4];
+  }
+}
+
+/* Monaco Editor Custom Styles */
+.monaco-editor .margin {
+  background-color: #1E1E1E !important;
+}
+
+.monaco-editor .scroll-decoration {
+  box-shadow: none !important;
+}
+
+.monaco-editor .cursors-layer .cursor {
+  background-color: #AEAFAD !important;
+  border-color: #AEAFAD !important;
 }
