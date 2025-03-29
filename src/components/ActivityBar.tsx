@@ -2,7 +2,7 @@
 import React from 'react';
 import { 
   Files, Search, GitBranch, PackageOpen, Play, Database, 
-  Settings, User, Bug, Extension 
+  Settings, User, Bug, PuzzlePiece 
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -17,7 +17,7 @@ const ActivityBar: React.FC<ActivityBarProps> = ({ activeView, setActiveView }) 
     { id: 'search', icon: <Search size={24} />, tooltip: 'Search' },
     { id: 'git', icon: <GitBranch size={24} />, tooltip: 'Source Control' },
     { id: 'debug', icon: <Bug size={24} />, tooltip: 'Run and Debug' },
-    { id: 'extensions', icon: <Extension size={24} />, tooltip: 'Extensions' },
+    { id: 'extensions', icon: <PuzzlePiece size={24} />, tooltip: 'Extensions' },
   ];
 
   return (

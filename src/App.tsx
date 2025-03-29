@@ -8,7 +8,11 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
+// Create a new QueryClient instance
 const queryClient = new QueryClient();
+
+// Add console log to verify App is loaded
+console.log('App component loaded');
 
 const App = () => {
   console.log('App component rendered');

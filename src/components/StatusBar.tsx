@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GitBranch, Wifi, Check, Bell, X, AlertCircle } from 'lucide-react';
+import { GitBranch, Wifi, Check, Bell, X, AlertCircle, Clock, Globe } from 'lucide-react';
 
 interface StatusBarProps {
   activeFile: string | null;
@@ -10,13 +10,13 @@ const StatusBar: React.FC<StatusBarProps> = ({ activeFile }) => {
   const getFileExtension = () => {
     if (!activeFile) return '';
     const parts = activeFile.split('.');
-    return parts[parts.length - 1].toUpperCase();
+    return parts[parts.length - 1].toLowerCase();
   };
 
   const getLanguage = () => {
     if (!activeFile) return 'Plain Text';
     
-    const extension = getFileExtension().toLowerCase();
+    const extension = getFileExtension();
     
     const languageMap: Record<string, string> = {
       'js': 'JavaScript',
@@ -59,8 +59,15 @@ const StatusBar: React.FC<StatusBarProps> = ({ activeFile }) => {
       </div>
       
       <div className="flex items-center">
+        <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors flex items-center">
+          <Clock size={14} className="mr-1" />
+          <span>{new Date().toLocaleTimeString()}</span>
+        </div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">{getLanguage()}</div>
-        <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">UTF-8</div>
+        <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">
+          <Globe size={14} className="mr-1 inline-block" />
+          <span>UTF-8</span>
+        </div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">LF</div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">Spaces: 2</div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">
