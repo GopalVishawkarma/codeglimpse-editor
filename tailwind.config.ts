@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,16 +53,44 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				editor: {
+					background: '#1e1e1e',
+					foreground: '#d4d4d4',
+					lineHighlight: '#2a2d2e',
+					selection: '#264f78',
+					inactiveSelection: '#3a3d41',
+					selectionHighlight: '#add6ff26',
+					findMatch: '#515c6a',
+					findMatchHighlight: '#ea5c0055',
+					lineNumber: '#858585',
+					activeLineNumber: '#c6c6c6',
+				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
-				}
+					background: '#252526',
+					foreground: '#cccccc',
+					active: '#1e1e1e',
+					border: '#383838',
+					hoverBackground: '#2a2d2e',
+				},
+				activityBar: {
+					background: '#333333',
+					foreground: '#ffffff',
+					activeBorder: '#0078d4',
+					inactiveForeground: '#ffffff80',
+				},
+				statusBar: {
+					background: '#0078d4',
+					foreground: '#ffffff',
+					noFolderBackground: '#68217a',
+					noFolderForeground: '#ffffff',
+				},
+				tab: {
+					activeBackground: '#1e1e1e',
+					inactiveBackground: '#2d2d2d',
+					activeForeground: '#ffffff',
+					inactiveForeground: '#ffffff80',
+					border: '#252526',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
