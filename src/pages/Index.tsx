@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import ActivityBar from '@/components/ActivityBar';
 import Sidebar from '@/components/Sidebar';
@@ -17,6 +16,8 @@ import { openFile, openFolder, saveFile, readDirectory, readFile, isFileSystemAc
 import { demoFileContent } from '@/utils/sampleFiles';
 
 const Index = () => {
+  console.log('Index component rendered');
+  
   const [activeView, setActiveView] = useState('explorer');
   const [sidebarWidth, setSidebarWidth] = useState(250);
   const [resizing, setResizing] = useState(false);
@@ -35,6 +36,7 @@ const Index = () => {
 
   // Load sample file content
   useEffect(() => {
+    console.log('Loading sample file content');
     setFileContents(demoFileContent);
   }, []);
 
