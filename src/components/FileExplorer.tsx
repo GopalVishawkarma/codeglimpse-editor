@@ -1,10 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown, File, Folder } from 'lucide-react';
 
 interface FileExplorerProps {
   selectedFile: string | null;
   onFileSelect: (filePath: string) => void;
+  projectFiles?: any[];
+  onOpenProjectFile?: (filePath: string, handle: any) => void;
 }
 
 // Demo files and folders structure
@@ -32,17 +34,71 @@ const demoFileSystem = {
   }
 };
 
-const FileExplorer: React.FC<FileExplorerProps> = ({ selectedFile, onFileSelect }) => {
+const FileExplorer: React.FC<FileExplorerProps> = ({ 
+  selectedFile, 
+  onFileSelect,
+  projectFiles = [],
+  onOpenProjectFile = () => {}
+}) => {
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({
     'project': true,
     'project/src': true,
   });
+  
+  const [fileTree, setFileTree] = useState<any>({});
+  const [hasLocalFiles, setHasLocalFiles] = useState(false);
+
+  // Process project files into a tree structure
+  useEffect(() => {
+    if (projectFiles.length > 0) {
+      const tree: any = { local: { type: 'folder', children: {} } };
+      
+      projectFiles.forEach(file => {
+        const parts = file.path.split('/');
+        let current = tree.local.children;
+        
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          
+          if (i === parts.length - 1 && file.type === 'file') {
+            // This is a file
+            current[part] = { type: 'file', handle: file.handle };
+          } else {
+            // This is a directory
+            if (!current[part]) {
+              current[part] = { type: 'folder', children: {} };
+            }
+            current = current[part].children;
+          }
+        }
+      });
+      
+      setFileTree(tree);
+      setHasLocalFiles(true);
+      
+      // Auto-expand the root folder
+      setExpandedFolders(prev => ({ ...prev, 'local': true }));
+    } else {
+      setFileTree(demoFileSystem);
+      setHasLocalFiles(false);
+    }
+  }, [projectFiles]);
 
   const toggleFolder = (path: string) => {
     setExpandedFolders(prev => ({
       ...prev,
       [path]: !prev[path]
     }));
+  };
+
+  const handleFileClick = (path: string, item: any) => {
+    if (item.type === 'file') {
+      if (hasLocalFiles && item.handle) {
+        onOpenProjectFile(path, item.handle);
+      } else {
+        onFileSelect(path);
+      }
+    }
   };
 
   const renderFileSystemItem = (
@@ -68,7 +124,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ selectedFile, onFileSelect 
             if (isFolder) {
               toggleFolder(path);
             } else {
-              onFileSelect(path);
+              handleFileClick(path, item);
             }
           }}
         >
@@ -102,7 +158,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ selectedFile, onFileSelect 
 
   return (
     <div className="p-1">
-      {Object.entries(demoFileSystem).map(([name, item]) => 
+      {Object.entries(fileTree).map(([name, item]) => 
         renderFileSystemItem(name, item, name)
       )}
     </div>

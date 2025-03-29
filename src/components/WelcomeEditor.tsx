@@ -1,13 +1,22 @@
 
 import React from 'react';
-import { FolderOpen, FileText, Github } from 'lucide-react';
+import { FolderOpen, FileText, Github, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { isFileSystemAccessSupported } from '@/utils/fileSystem';
 
 interface WelcomePageProps {
   onOpenSampleFile: () => void;
+  onOpenLocalFile: () => void;
+  onOpenLocalFolder: () => void;
 }
 
-const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenSampleFile }) => {
+const WelcomePage: React.FC<WelcomePageProps> = ({ 
+  onOpenSampleFile, 
+  onOpenLocalFile, 
+  onOpenLocalFolder 
+}) => {
+  const isFileSystemSupported = isFileSystemAccessSupported();
+  
   return (
     <div className="flex flex-col items-center justify-center h-full text-editor-foreground">
       <div className="max-w-md w-full p-8">
@@ -29,12 +38,34 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenSampleFile }) => {
           <Button 
             variant="outline" 
             className="w-full justify-start px-4 py-6 bg-editor-background border-editor-lineHighlight hover:bg-editor-lineHighlight"
-            disabled
+            onClick={onOpenLocalFile}
+            disabled={!isFileSystemSupported}
+          >
+            <Upload className="mr-4" size={24} />
+            <div className="text-left">
+              <div className="font-medium">Open File</div>
+              <div className="text-sm opacity-70">
+                {isFileSystemSupported 
+                  ? 'Open a file from your device to edit' 
+                  : 'Your browser does not support File System Access API'}
+              </div>
+            </div>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="w-full justify-start px-4 py-6 bg-editor-background border-editor-lineHighlight hover:bg-editor-lineHighlight"
+            onClick={onOpenLocalFolder}
+            disabled={!isFileSystemSupported}
           >
             <FolderOpen className="mr-4" size={24} />
             <div className="text-left">
               <div className="font-medium">Open Folder</div>
-              <div className="text-sm opacity-70">Open a project folder to start editing</div>
+              <div className="text-sm opacity-70">
+                {isFileSystemSupported 
+                  ? 'Open a project folder to start editing' 
+                  : 'Your browser does not support File System Access API'}
+              </div>
             </div>
           </Button>
           
@@ -53,7 +84,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({ onOpenSampleFile }) => {
         
         <div className="text-center text-sm opacity-70">
           <p>CodeGlimpse Editor - A VS Code-inspired web editor</p>
-          <p className="mt-1">Click "Open Sample File" to start exploring</p>
+          <p className="mt-1">Sign in to save your projects and settings</p>
         </div>
       </div>
     </div>

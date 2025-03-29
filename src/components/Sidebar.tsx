@@ -1,21 +1,37 @@
 
 import React, { useState } from 'react';
 import FileExplorer from './FileExplorer';
-import { Search } from 'lucide-react';
+import { Search, AlertCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 interface SidebarProps {
   activeView: string;
   selectedFile: string | null;
   onFileSelect: (filePath: string) => void;
+  projectFiles?: any[];
+  onOpenProjectFile?: (filePath: string, handle: any) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeView, selectedFile, onFileSelect }) => {
+const Sidebar: React.FC<SidebarProps> = ({ 
+  activeView, 
+  selectedFile, 
+  onFileSelect,
+  projectFiles = [],
+  onOpenProjectFile = () => {}
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const renderView = () => {
     switch (activeView) {
       case 'explorer':
-        return <FileExplorer selectedFile={selectedFile} onFileSelect={onFileSelect} />;
+        return (
+          <FileExplorer 
+            selectedFile={selectedFile} 
+            onFileSelect={onFileSelect} 
+            projectFiles={projectFiles}
+            onOpenProjectFile={onOpenProjectFile}
+          />
+        );
       case 'search':
         return (
           <div className="p-4">
@@ -48,6 +64,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, selectedFile, onFileSelec
             <p className="opacity-70">Search for extensions in the Marketplace</p>
           </div>
         );
+      case 'debug':
+        return (
+          <div className="p-4 text-sm text-sidebar-foreground">
+            <h3 className="font-semibold mb-2">Debug</h3>
+            <div className="flex flex-col space-y-2 mt-4">
+              <p className="opacity-70">No debug configurations found.</p>
+              <button className="text-blue-400 hover:underline text-left">Add Configuration...</button>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -63,6 +89,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, selectedFile, onFileSelec
         return 'SOURCE CONTROL';
       case 'extensions':
         return 'EXTENSIONS';
+      case 'debug':
+        return 'DEBUG';
       default:
         return '';
     }
