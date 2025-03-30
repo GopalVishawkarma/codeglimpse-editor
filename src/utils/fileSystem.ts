@@ -56,10 +56,29 @@ export const isFileSystemAccessSupported = () => {
   return 'showOpenFilePicker' in window && 'showDirectoryPicker' in window;
 };
 
+// Check if running in a restricted environment (like an iframe)
+export const isRunningInRestrictedContext = () => {
+  try {
+    // Check if we're in an iframe
+    if (window.self !== window.top) {
+      // In most browsers, cross-origin iframes can't use File System Access API
+      return true;
+    }
+    return false;
+  } catch (e) {
+    // If we can't access window.top due to security restrictions, we're in a restricted context
+    return true;
+  }
+};
+
 // Open a file from the file system
 export const openFile = async (): Promise<{ content: string; name: string; handle: FileSystemFileHandle } | null> => {
   if (!isFileSystemAccessSupported()) {
     throw new Error('File System Access API is not supported in this browser.');
+  }
+
+  if (isRunningInRestrictedContext()) {
+    throw new Error('Unable to access files. This app appears to be running in a restricted context (like an iframe).');
   }
 
   try {
@@ -86,6 +105,9 @@ export const openFile = async (): Promise<{ content: string; name: string; handl
     };
   } catch (error) {
     console.error('Error opening file:', error);
+    if (error instanceof DOMException && error.name === 'SecurityError') {
+      throw new Error('Permission denied. This feature may be restricted in your current browser environment.');
+    }
     return null;
   }
 };
@@ -94,6 +116,10 @@ export const openFile = async (): Promise<{ content: string; name: string; handl
 export const saveFile = async (fileHandle: FileSystemFileHandle, content: string): Promise<boolean> => {
   if (!isFileSystemAccessSupported()) {
     throw new Error('File System Access API is not supported in this browser.');
+  }
+
+  if (isRunningInRestrictedContext()) {
+    throw new Error('Unable to save files. This app appears to be running in a restricted context (like an iframe).');
   }
 
   try {
@@ -125,11 +151,18 @@ export const openFolder = async (): Promise<{ directoryHandle: FileSystemDirecto
     throw new Error('File System Access API is not supported in this browser.');
   }
 
+  if (isRunningInRestrictedContext()) {
+    throw new Error('Unable to access folders. This app appears to be running in a restricted context (like an iframe).');
+  }
+
   try {
     const directoryHandle = await window.showDirectoryPicker();
     return { directoryHandle };
   } catch (error) {
     console.error('Error opening folder:', error);
+    if (error instanceof DOMException && error.name === 'SecurityError') {
+      throw new Error('Permission denied. This feature may be restricted in your current browser environment.');
+    }
     return null;
   }
 };

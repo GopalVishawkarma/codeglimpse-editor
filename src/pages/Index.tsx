@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import ActivityBar from '@/components/ActivityBar';
 import Sidebar from '@/components/Sidebar';
@@ -6,11 +7,20 @@ import MonacoEditor from '@/components/MonacoEditor';
 import StatusBar from '@/components/StatusBar';
 import WelcomeEditor from '@/components/WelcomeEditor';
 import UserProfile from '@/components/Auth/UserProfile';
+import UnsupportedFeatureNotice from '@/components/UnsupportedFeatureNotice';
 import { Button } from '@/components/ui/button';
 import { Loader, FilePlus, FolderOpen, Save, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { openFile, openFolder, saveFile, readDirectory, readFile, isFileSystemAccessSupported } from '@/utils/fileSystem';
+import { 
+  openFile, 
+  openFolder, 
+  saveFile, 
+  readDirectory, 
+  readFile, 
+  isFileSystemAccessSupported,
+  isRunningInRestrictedContext
+} from '@/utils/fileSystem';
 
 // Import sample files
 import { demoFileContent } from '@/utils/sampleFiles';
@@ -31,8 +41,20 @@ const Index = () => {
   const [projectFiles, setProjectFiles] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
+  // New state for file system access
+  const [fileSystemError, setFileSystemError] = useState<string | null>(null);
+  
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Check if file system access is available
+  useEffect(() => {
+    if (!isFileSystemAccessSupported()) {
+      setFileSystemError("Your browser doesn't support the File System Access API. Please use Chrome, Edge, or another modern browser.");
+    } else if (isRunningInRestrictedContext()) {
+      setFileSystemError("File system access is restricted in this environment. This feature may not work in iframes or some browser contexts.");
+    }
+  }, []);
 
   // Load sample file content
   useEffect(() => {
@@ -105,10 +127,23 @@ const Index = () => {
   // Handle open local file
   const handleOpenLocalFile = async () => {
     try {
+      // Reset previous error
+      setFileSystemError(null);
+      
       if (!isFileSystemAccessSupported()) {
         toast({
           title: "Not Supported",
           description: "Your browser doesn't support the File System Access API. Try using Chrome, Edge, or Opera.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (isRunningInRestrictedContext()) {
+        setFileSystemError("This app is running in a restricted context (like an iframe) where file system access is limited by browser security policies.");
+        toast({
+          title: "Access Restricted",
+          description: "File system access is restricted in this environment. Try using the app in a regular browser tab.",
           variant: "destructive",
         });
         return;
@@ -141,6 +176,7 @@ const Index = () => {
         });
       }
     } catch (error: any) {
+      setFileSystemError(error.message);
       toast({
         title: "Error Opening File",
         description: error.message || "Failed to open file",
@@ -152,10 +188,23 @@ const Index = () => {
   // Handle open local folder
   const handleOpenLocalFolder = async () => {
     try {
+      // Reset previous error
+      setFileSystemError(null);
+      
       if (!isFileSystemAccessSupported()) {
         toast({
           title: "Not Supported",
           description: "Your browser doesn't support the File System Access API. Try using Chrome, Edge, or Opera.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (isRunningInRestrictedContext()) {
+        setFileSystemError("This app is running in a restricted context (like an iframe) where file system access is limited by browser security policies.");
+        toast({
+          title: "Access Restricted",
+          description: "File system access is restricted in this environment. Try using the app in a regular browser tab.",
           variant: "destructive",
         });
         return;
@@ -178,6 +227,8 @@ const Index = () => {
         });
       }
     } catch (error: any) {
+      console.error('Error opening folder:', error);
+      setFileSystemError(error.message);
       toast({
         title: "Error Opening Folder",
         description: error.message || "Failed to open folder",
@@ -325,8 +376,15 @@ const Index = () => {
                 <Loader className="animate-spin text-primary h-8 w-8" />
               </div>
             )}
-            
-            {activeFile ? (
+
+            {fileSystemError && !activeFile ? (
+              <UnsupportedFeatureNotice
+                title="File System Access Restricted"
+                message={fileSystemError}
+                actionText="Learn more about File System Access API"
+                actionHref="https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API"
+              />
+            ) : activeFile ? (
               <MonacoEditor
                 language={activeFile.split('.').pop() || ''}
                 value={fileContents[activeFile] || ''}
