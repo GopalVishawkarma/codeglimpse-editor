@@ -22,45 +22,56 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     'project/public': false,
   });
 
-  // Sample structure for demo purposes
+  // Sample structure that looks more like the reference image
   const demoFiles = [
     {
-      name: 'project',
+      name: 'CREATE-REACT-APP',
       type: 'folder',
       path: 'project',
       children: [
         {
-          name: 'src',
+          name: 'github',
           type: 'folder',
-          path: 'project/src',
-          children: [
-            { name: 'App.tsx', type: 'file', path: 'project/src/App.tsx' },
-            { name: 'index.tsx', type: 'file', path: 'project/src/index.tsx' },
-            { name: 'styles.css', type: 'file', path: 'project/src/styles.css' },
-            {
-              name: 'components',
-              type: 'folder',
-              path: 'project/src/components',
-              children: [
-                { name: 'Button.tsx', type: 'file', path: 'project/src/components/Button.tsx' },
-                { name: 'Header.tsx', type: 'file', path: 'project/src/components/Header.tsx' },
-                { name: 'Footer.tsx', type: 'file', path: 'project/src/components/Footer.tsx' },
-              ],
-            },
-          ],
+          path: 'project/github',
+          children: [],
+        },
+        {
+          name: 'vscode',
+          type: 'folder',
+          path: 'project/vscode',
+          children: [],
+        },
+        {
+          name: 'node_modules',
+          type: 'folder',
+          path: 'project/node_modules',
+          children: [],
         },
         {
           name: 'public',
           type: 'folder',
           path: 'project/public',
+          children: [],
+        },
+        {
+          name: 'src',
+          type: 'folder',
+          path: 'project/src',
           children: [
-            { name: 'index.html', type: 'file', path: 'project/public/index.html' },
-            { name: 'favicon.ico', type: 'file', path: 'project/public/favicon.ico' },
+            { name: 'App.css', type: 'file', path: 'project/src/App.css' },
+            { name: 'App.js', type: 'file', path: 'project/src/App.js' },
+            { name: 'App.test.js', type: 'file', path: 'project/src/App.test.js' },
+            { name: 'index.css', type: 'file', path: 'project/src/index.css' },
+            { name: 'index.js', type: 'file', path: 'project/src/index.js' },
+            { name: 'logo.svg', type: 'file', path: 'project/src/logo.svg' },
+            { name: 'serviceWorker.js', type: 'file', path: 'project/src/serviceWorker.js' },
           ],
         },
+        { name: '.gitignore', type: 'file', path: 'project/.gitignore' },
+        { name: 'package-lock.json', type: 'file', path: 'project/package-lock.json' },
         { name: 'package.json', type: 'file', path: 'project/package.json' },
-        { name: 'tsconfig.json', type: 'file', path: 'project/tsconfig.json' },
         { name: 'README.md', type: 'file', path: 'project/README.md' },
+        { name: 'yarn.lock', type: 'file', path: 'project/yarn.lock' },
       ],
     },
   ];

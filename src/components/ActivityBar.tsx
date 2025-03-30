@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { 
-  Files, Search, GitBranch, PackageOpen, Play, Database, 
-  Settings, User, Bug, Puzzle 
+  Files, Search, GitBranch, Play, 
+  Settings, Bug, Puzzle 
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 

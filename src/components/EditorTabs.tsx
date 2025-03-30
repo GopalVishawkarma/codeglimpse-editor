@@ -52,7 +52,7 @@ const EditorTabs: React.FC<EditorTabsProps> = ({
       {openFiles.map((file) => (
         <div
           key={file}
-          className={`vscode-tab group flex items-center h-full px-3 border-t border-transparent transition-colors ${
+          className={`group flex items-center h-full px-3 border-t border-transparent transition-colors ${
             activeFile === file 
               ? 'bg-[#1E1E1E] text-white border-t-[#0078D4]' 
               : 'bg-[#2D2D2D] text-[#969696] hover:text-white'

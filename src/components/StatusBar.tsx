@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GitBranch, Wifi, Check, Bell, X, AlertCircle, Clock, Globe } from 'lucide-react';
 
 interface StatusBarProps {
@@ -7,6 +7,16 @@ interface StatusBarProps {
 }
 
 const StatusBar: React.FC<StatusBarProps> = ({ activeFile }) => {
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+
   const getFileExtension = () => {
     if (!activeFile) return '';
     const parts = activeFile.split('.');
@@ -46,7 +56,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ activeFile }) => {
       <div className="flex items-center">
         <div className="flex items-center px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">
           <GitBranch size={14} className="mr-1" />
-          <span>main</span>
+          <span>master</span>
         </div>
         <div className="flex items-center px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">
           <Check size={14} className="mr-1" />
@@ -61,7 +71,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ activeFile }) => {
       <div className="flex items-center">
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors flex items-center">
           <Clock size={14} className="mr-1" />
-          <span>{new Date().toLocaleTimeString()}</span>
+          <span>{currentTime}</span>
         </div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">{getLanguage()}</div>
         <div className="px-2 hover:bg-[#1F8AD2] cursor-pointer transition-colors">

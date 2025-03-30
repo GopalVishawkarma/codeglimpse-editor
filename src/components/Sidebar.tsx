@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import FileExplorer from './FileExplorer';
-import { Search, AlertCircle, Bug, XCircle, Terminal, Filter, MoreHorizontal } from 'lucide-react';
+import { Search, Terminal, Filter, MoreHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface SidebarProps {
