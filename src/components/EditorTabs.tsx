@@ -1,13 +1,6 @@
 
 import React from 'react';
-import { X } from 'lucide-react';
-import { 
-  SiJavascript, SiTypescript, SiHtml5, SiCss3, SiJson, 
-  SiMarkdown, SiPython, SiJava, SiReact
-} from 'react-icons/si';
-import { VscFile, VscFileCode } from 'react-icons/vsc';
-
-<lov-add-dependency>react-icons@4.12.0</lov-add-dependency>
+import { X, FileCode, File, FileJson, FileText } from 'lucide-react';
 
 interface EditorTabsProps {
   openFiles: string[];
@@ -27,28 +20,26 @@ const EditorTabs: React.FC<EditorTabsProps> = ({
     
     switch (extension) {
       case 'json':
-        return <SiJson size={16} className="text-yellow-500" />;
+        return <FileJson size={16} className="text-yellow-500" />;
       case 'js':
-        return <SiJavascript size={16} className="text-yellow-400" />;
       case 'jsx':
-        return <SiReact size={16} className="text-blue-400" />;
+        return <FileCode size={16} className="text-yellow-400" />;
       case 'ts':
-        return <SiTypescript size={16} className="text-blue-600" />;
       case 'tsx':
-        return <SiReact size={16} className="text-blue-500" />;
+        return <FileCode size={16} className="text-blue-500" />;
       case 'html':
-        return <SiHtml5 size={16} className="text-orange-500" />;
+        return <FileCode size={16} className="text-orange-500" />;
       case 'css':
       case 'scss':
-        return <SiCss3 size={16} className="text-blue-400" />;
+        return <FileCode size={16} className="text-blue-400" />;
       case 'md':
-        return <SiMarkdown size={16} className="text-white" />;
+        return <FileText size={16} className="text-white" />;
       case 'py':
-        return <SiPython size={16} className="text-blue-500" />;
+        return <FileCode size={16} className="text-blue-500" />;
       case 'java':
-        return <SiJava size={16} className="text-red-500" />;
+        return <FileCode size={16} className="text-red-500" />;
       default:
-        return extension ? <VscFileCode size={16} /> : <VscFile size={16} />;
+        return extension ? <FileCode size={16} /> : <File size={16} />;
     }
   };
 
